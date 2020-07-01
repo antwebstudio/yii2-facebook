@@ -1,5 +1,5 @@
 {
-    "name": "antweb/yii2-facebook-instant-articles",
+    "name": "antweb/yii2-facebook",
     "description": "Yii2 Module",
     "type": "ant-module",
     "authors": [
@@ -14,7 +14,8 @@
         "yiisoft/yii2": "~2.0.0",
 		"antweb/yii2-core" : "*",
         "facebook/facebook-instant-articles-sdk-php": "^1.10",
-        "kitetail/zttp": "^0.6.0"
+        "kitetail/zttp": "^0.6.0",
+        "facebook/graph-sdk": "^5.7"
 	},
     "require-dev": {
         "yiisoft/yii2-codeception": "~2.0.0",
