@@ -12,6 +12,7 @@ class InstantArticle extends \yii\base\Component {
 	public $pageId;
 	public $accessToken;
 	public $ruleFile;
+	public $debug = false;
 	
 	protected $client;
 	protected $transformer;
@@ -20,7 +21,7 @@ class InstantArticle extends \yii\base\Component {
 		$accessToken = $this->getAccessToken();
 		
 		if (isset($accessToken)) {
-			$this->client = Client::create($this->appId, $this->appSecret, $accessToken, $this->pageId, YII_DEBUG);
+			$this->client = Client::create($this->appId, $this->appSecret, $accessToken, $this->pageId, $this->debug);
 		}
 	}
 	
