@@ -10,6 +10,7 @@ class InstantArticle extends \yii\base\Component {
 	public $appId;
 	public $appSecret;
 	public $pageId;
+	public $storeAccessToken;
 	public $accessToken;
 	public $ruleFile;
 	public $debug = false;
@@ -26,7 +27,36 @@ class InstantArticle extends \yii\base\Component {
 	}
 	
 	public function isAuthenticated() {
-		return isset($this->client);
+		$accessToken = $this->getAccessToken();
+		$fb = new \Facebook\Facebook([
+			'app_id' => $this->appId,           //Replace {your-app-id} with your app ID
+			'app_secret' => $this->appSecret,   //Replace {your-app-secret} with your app secret
+			'graph_api_version' => 'v6.0',
+		]);
+	  
+	  
+		try {
+
+			// Get your UserNode object, replace {access-token} with your token
+			$response = $fb->get('/me', $accessToken);
+
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
+			// Returns Graph API errors when they occur
+			// echo 'Graph returned an error: ' . $e->getMessage();
+			// exit;
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+			// Returns SDK errors when validation fails or other local issues
+			// echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			// exit;
+		}
+
+		$me = isset($response) ? $response->getGraphUser() : null;
+
+		return isset($me);
+	}
+
+	public function storeAccessToken($accessToken) {
+		return call_user_func_array($this->storeAccessToken, [$accessToken]);
 	}
 	
 	public function getAccessToken() {

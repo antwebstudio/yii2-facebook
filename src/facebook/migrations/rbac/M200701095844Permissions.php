@@ -16,6 +16,12 @@ class M200701095844Permissions extends Migration
 				'logged-in' => ['View own file', [Role::ROLE_GUEST]],
 				'publish-instant-article' => ['View own file', [Role::ROLE_GUEST]],
 			],
+			// \ant\facebook\controllers\DefaultController::class => [
+			// 	'index' => ['View own file', [Role::ROLE_GUEST]],
+			// ],
+			\ant\facebook\backend\controllers\DefaultController::class => [
+				'index' => ['View own file', [Role::ROLE_GUEST]],
+			],
 		];
 		
 		parent::init();

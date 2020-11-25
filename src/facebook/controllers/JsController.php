@@ -39,6 +39,8 @@ class JsController extends \yii\web\Controller {
 			
 			return $response;
 		} else {
+			return ['status' => 'not logged in', 'redirect' => Yii::$app->backendUrlManager->createUrl(['/facebook/backend'])];
+			return $this->redirect(['/facebook/backend']); // cannot work
 			throw new \Exception('Not authenticated. ');
 		}
 	}
