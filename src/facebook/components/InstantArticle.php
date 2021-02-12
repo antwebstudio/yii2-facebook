@@ -2,6 +2,7 @@
 namespace ant\facebook\components;
 
 use Yii;
+use Facebook\Helpers\FacebookRedirectLoginHelper;
 use Facebook\InstantArticles\Client\Client;
 use Facebook\InstantArticles\Transformer\Transformer;
 use Facebook\InstantArticles\Elements\InstantArticle as FacebookInstanceArticle;
@@ -13,6 +14,7 @@ class InstantArticle extends \yii\base\Component {
 	public $storeAccessToken;
 	public $accessToken;
 	public $ruleFile;
+	public $rules;
 	public $debug = false;
 	
 	protected $client;
@@ -20,10 +22,21 @@ class InstantArticle extends \yii\base\Component {
 	
 	public function init() {
 		$accessToken = $this->getAccessToken();
-		
-		if (isset($accessToken)) {
-			$this->client = Client::create($this->appId, $this->appSecret, $accessToken, $this->pageId, $this->debug);
+
+		if (!isset($this->accessToken)) {
+			throw new \Exception('Please set access token property of the '.get_class($this).' component. ');
 		}
+		if (!isset($this->appId) || !isset($this->appSecret)) {
+			throw new \Exception('Please set appId and appSecret property for '.get_class($this).'.');
+		}
+		if (!isset($this->pageId)) {
+			throw new \Exception('Please set pageId property for '.get_class($this).'.');
+		}
+		if (!isset($this->ruleFile) && !isset($this->rules)) {
+			throw new \Exception('Please set either ruleFile or rules property for '.get_class($this).'.');
+		}
+
+		$this->client = Client::create($this->appId, $this->appSecret, $accessToken, $this->pageId, $this->debug);
 	}
 	
 	public function isAuthenticated() {
@@ -60,7 +73,17 @@ class InstantArticle extends \yii\base\Component {
 	}
 	
 	public function getAccessToken() {
-		return call_user_func_array($this->accessToken, []);
+		if (isset($this->accessToken)) {
+			if (is_callable($this->accessToken)) {
+				$accessToken = call_user_func_array($this->accessToken, []);
+				if (!isset($accessToken)) {
+					throw new \Exception('Access token handler function return a null value.');
+				}
+				return $accessToken;
+			} else {
+				return $this->accessToken;
+			}
+		}
 	}
 	
 	public function submitUrl($url) {
@@ -120,8 +143,8 @@ class InstantArticle extends \yii\base\Component {
 		// Create a transformer object
 		$this->transformer = new Transformer();
 
-		// Load the rules from a file
-		$rules = file_get_contents(Yii::getAlias($this->ruleFile), true);
+		// Load the rules from a file if it is not set
+		$rules = $this->rules ?? file_get_contents(Yii::getAlias($this->ruleFile), true);
 
 		// Configure the transformer with the rules
 		$this->transformer->loadRules($rules);

@@ -29,7 +29,7 @@ return [
             'charset' => 'utf8',
         ],
         'moduleManager' => [
-            'class' => 'common\modules\moduleManager\components\ModuleManager',
+            'class' => 'ant\modules\moduleManager\components\ModuleManager',
 			'moduleAutoloadPaths' => [
 				'@ant',
 				'@common/modules', 
@@ -39,21 +39,21 @@ return [
 			],
         ],
 		// Needed for rbca migration, else error occured when run yii migrate
-        'authManager' => [
-            'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => [\common\rbac\Role::ROLE_GUEST, \common\rbac\Role::ROLE_USER],
-        ],
+        // 'authManager' => [
+        //     'class' => 'yii\rbac\DbManager',
+        //     'defaultRoles' => [\ant\rbac\Role::ROLE_GUEST, \ant\rbac\Role::ROLE_USER],
+        // ],
         'user' => [
 			'class' => 'yii\web\User',
-            'identityClass' => 'common\modules\user\models\User',
+            'identityClass' => 'ant\modules\user\models\User',
         ],
 	],
 	'controllerMap' => [
 		'module' => [
-			'class' => 'common\modules\moduleManager\console\controllers\DefaultController',
+			'class' => 'ant\modules\moduleManager\console\controllers\DefaultController',
 		],
 		'migrate' => [
-			'class' => 'common\modules\moduleManager\console\controllers\MigrateController',
+			'class' => 'ant\modules\moduleManager\console\controllers\MigrateController',
             'migrationPath' => [
                 '@common/migrations/db',
                 '@yii/rbac/migrations',
@@ -61,18 +61,18 @@ return [
             ],
             'migrationNamespaces' => [
                 'yii\queue\db\migrations',
-				'common\modules\moduleManager\migrations\db',
+				'ant\modules\moduleManager\migrations\db',
 			],
             'migrationTable' => '{{%system_db_migration}}'
 		],
 		'rbac-migrate' => [
-			'class' => 'common\modules\moduleManager\console\controllers\RbacMigrateController',
+			'class' => 'ant\modules\moduleManager\console\controllers\RbacMigrateController',
             'migrationPath' => [
                 '@common/migrations/rbac',
             ],
             'migrationTable' => '{{%system_rbac_migration}}',
             'migrationNamespaces' => [
-                'common\modules\moduleManager\migrations\rbac',
+                'ant\modules\moduleManager\migrations\rbac',
 			],
             'templateFile' => '@common/rbac/views/migration.php'
 		],
